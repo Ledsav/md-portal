@@ -5,13 +5,16 @@ import MainPanel from '../components/MainPanel/MainPanel';
 import SidePanel from '../components/SidePanel/SidePanel';
 import SliderControl from '../components/SliderControl/SliderControl';
 import TreeViewControl from '../components/TreeViewControl/TreeViewControl';
-import ImportDialog from '../components/ImportDialog/ImportDialog';
+import ImportDialog from '../components/Dialogs/ImportDialog/ImportDialog';
 import ImportButton from '../components/Buttons/ImportButton/ImportButton';
+import ImportResultDialog from '../components/Dialogs/ImportResultDialog/ImportResultDialog';
 import { ControlPanelProvider, useControlPanelContext } from '../context/ControlPanelContext';
 import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorageUtil';
 
 const MainLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
+    const [resultDialogOpen, setResultDialogOpen] = useState(false);
+    const [importSuccess, setImportSuccess] = useState(false);
     const [image, setImage] = useState<string | null>(loadFromLocalStorage('uploadedImage'));
 
     const theme = useTheme();
@@ -31,6 +34,12 @@ const MainLayout: React.FC = () => {
             const imageData = reader.result as string;
             setImage(imageData);
             saveToLocalStorage('uploadedImage', imageData);
+            setImportSuccess(true);
+            setResultDialogOpen(true);
+        };
+        reader.onerror = () => {
+            setImportSuccess(false);
+            setResultDialogOpen(true);
         };
         reader.readAsDataURL(file);
         setOpen(false);
@@ -75,6 +84,7 @@ const MainLayout: React.FC = () => {
                 </SidePanel>
             </Box>
             <ImportDialog open={open} onClose={() => setOpen(false)} onDrop={handleDrop} />
+            <ImportResultDialog open={resultDialogOpen} onClose={() => setResultDialogOpen(false)} success={importSuccess} />
         </Box>
     );
 };
