@@ -6,6 +6,10 @@ interface ControlPanelContextType {
     setSliderValue: (value: number) => void;
     expanded: string[];
     setExpanded: (nodeIds: string[]) => void;
+    leftPanelOpen: boolean;
+    setLeftPanelOpen: (isOpen: boolean) => void;
+    rightPanelOpen: boolean;
+    setRightPanelOpen: (isOpen: boolean) => void;
 }
 
 const ControlPanelContext = createContext<ControlPanelContextType | undefined>(undefined);
@@ -17,6 +21,8 @@ interface ControlPanelProviderProps {
 export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ children }) => {
     const [sliderValue, setSliderValue] = useState<number>(loadFromLocalStorage('sliderValue') || 30);
     const [expanded, setExpanded] = useState<string[]>(loadFromLocalStorage('expandedNodes') || []);
+    const [leftPanelOpen, setLeftPanelOpen] = useState<boolean>(loadFromLocalStorage('leftPanelOpen') !== null ? loadFromLocalStorage('leftPanelOpen') : true);
+    const [rightPanelOpen, setRightPanelOpen] = useState<boolean>(loadFromLocalStorage('rightPanelOpen') !== null ? loadFromLocalStorage('rightPanelOpen') : true);
 
     useEffect(() => {
         saveToLocalStorage('sliderValue', sliderValue);
@@ -26,8 +32,16 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
         saveToLocalStorage('expandedNodes', expanded);
     }, [expanded]);
 
+    useEffect(() => {
+        saveToLocalStorage('leftPanelOpen', leftPanelOpen);
+    }, [leftPanelOpen]);
+
+    useEffect(() => {
+        saveToLocalStorage('rightPanelOpen', rightPanelOpen);
+    }, [rightPanelOpen]);
+
     return (
-        <ControlPanelContext.Provider value={{ sliderValue, setSliderValue, expanded, setExpanded }}>
+        <ControlPanelContext.Provider value={{ sliderValue, setSliderValue, expanded, setExpanded, leftPanelOpen, setLeftPanelOpen, rightPanelOpen, setRightPanelOpen }}>
             {children}
         </ControlPanelContext.Provider>
     );
