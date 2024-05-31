@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
-import ClampButton from '../ClampButton/ClampButton';
+import {Box, Typography} from '@mui/material';
+import ClampButton from '../Buttons/ClampButton/ClampButton';
 
 interface SidePanelProps {
     side: 'left' | 'right';
+    children?: React.ReactNode; // Accept children components
 }
 
-const SidePanel: React.FC<SidePanelProps> = ({ side }) => {
+const SidePanel: React.FC<SidePanelProps> = ({ side, children }) => {
     const [isOpen, setIsOpen] = useState(true);
-
     return (
         <Box sx={{ position: 'relative', height: '100%' }}>
             <Box
@@ -28,7 +28,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ side }) => {
             >
                 {isOpen && (
                     <Box sx={{ width: '240px', height: '100%', padding: 2 }}>
-                        {/* Side Panel Content */}
+                        {children} {/* Render children components */}
                     </Box>
                 )}
             </Box>
