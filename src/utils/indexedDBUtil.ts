@@ -26,7 +26,14 @@ export const loadImagesFromIndexedDB = async () => {
     const tx = db.transaction(STORE_NAME, 'readonly');
     const images = await tx.store.getAll();
     await tx.done;
-    return images.map(record => record.image);
+    return images.map(record => ({ id: record.id, image: record.image }));
+};
+
+export const deleteImageFromIndexedDB = async (id: number) => {
+    const db = await initDB();
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    await tx.store.delete(id);
+    await tx.done;
 };
 
 export const clearIndexedDB = async () => {

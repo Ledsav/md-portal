@@ -1,9 +1,12 @@
+// src/hooks/useImageImport.ts
 import { useState, useEffect, useCallback } from 'react';
 import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorageUtil';
 import { useControlPanelContext } from '../context/ControlPanelContext';
+import { useTranslation } from 'react-i18next';
 
 const useImageImport = () => {
     const { addImage } = useControlPanelContext();
+    const { t } = useTranslation();
     const [resultDialogOpen, setResultDialogOpen] = useState(false);
     const [importSuccess, setImportSuccess] = useState(false);
     const [importMessage, setImportMessage] = useState('');
@@ -14,14 +17,14 @@ const useImageImport = () => {
         const maxSize = 5 * 1024 * 1024; // 5 MB
 
         if (!validImageTypes.includes(file.type)) {
-            setImportMessage('Invalid file type. Only JPEG, PNG, and GIF are allowed.');
+            setImportMessage(t('invalid file type'));
             setImportSuccess(false);
             setResultDialogOpen(true);
             return;
         }
 
         if (file.size > maxSize) {
-            setImportMessage('File size exceeds the limit of 5 MB.');
+            setImportMessage(t('file size limit'));
             setImportSuccess(false);
             setResultDialogOpen(true);
             return;
@@ -33,17 +36,17 @@ const useImageImport = () => {
             setImage(imageData);
             saveToLocalStorage('uploadedImage', imageData);
             addImage(imageData);
-            setImportMessage('Image imported successfully.');
+            setImportMessage(t('import success'));
             setImportSuccess(true);
             setResultDialogOpen(true);
         };
         reader.onerror = () => {
-            setImportMessage('Error reading the file.');
+            setImportMessage(t('error reading file'));
             setImportSuccess(false);
             setResultDialogOpen(true);
         };
         reader.readAsDataURL(file);
-    }, [addImage]);
+    }, [addImage, t]);
 
     useEffect(() => {
         const savedImage = loadFromLocalStorage('uploadedImage');

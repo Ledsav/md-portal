@@ -1,7 +1,6 @@
-// MainLayout.tsx
-
+// src/layouts/MainLayout.tsx
 import React, { useState } from 'react';
-import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import TopBar from '../components/TopBar/TopBar';
 import MainPanel from '../components/MainPanel/MainPanel';
 import SidePanel from '../components/SidePanel/SidePanel';
@@ -13,11 +12,14 @@ import ImportResultDialog from '../components/Dialogs/ImportResultDialog/ImportR
 import ImageImportWidget from '../components/ImageImportWidget/ImageImportWidget';
 import { ControlPanelProvider, useControlPanelContext } from '../context/ControlPanelContext';
 import useImageImport from '../hooks/useImageImport';
+import { ThemeProvider } from "../context/ThemeContext";
+import ToggleThemeButton from "../components/Buttons/ToggleThemeButton/ToggleThemeButton";
+import ResetButton from "../components/Buttons/ResetButton/ResetButton";
+import LanguageSwitcher from '../components/Menus/LanguageSwitcher';
 
 const MainLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
     const { image, handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage } = useImageImport();
-    const { resetData } = useControlPanelContext();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -51,8 +53,9 @@ const MainLayout: React.FC = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-            <TopBar>
-                <Button onClick={resetData} color="inherit">Reset</Button>
+            <TopBar leftComponent={<ResetButton />}>
+                <LanguageSwitcher />
+                <ToggleThemeButton />
             </TopBar>
             <Box sx={{ display: 'flex', flexGrow: 1, position: 'relative' }}>
                 <SidePanel
@@ -92,7 +95,9 @@ const MainLayout: React.FC = () => {
 
 const MainLayoutWithProvider: React.FC = () => (
     <ControlPanelProvider>
-        <MainLayout />
+        <ThemeProvider>
+            <MainLayout />
+        </ThemeProvider>
     </ControlPanelProvider>
 );
 

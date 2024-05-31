@@ -1,0 +1,12 @@
+{
+  "import photo": "Import Photo",
+  "reset all": "Reset All",
+  "dialog photo": "Drag and drop a photo here, or click to select one",
+  "import success": "Import Successful",
+  "import failed": "Import Failed",
+  "close": "Close",
+  "no image placeholder": "No images imported.",
+  "invalid file type": "Invalid file type. Only JPEG, PNG, and GIF are allowed.",
+  "file size limit": "File size exceeds the limit of 5 MB.",
+  "error reading file": "Error reading the file."
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, SxProps, Theme } from '@mui/material';
+import { Box, SxProps, Theme, useTheme } from '@mui/material';
 import ClampButton from '../Buttons/ClampButton/ClampButton';
 
 interface SidePanelProps {
@@ -11,6 +11,8 @@ interface SidePanelProps {
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, children, sx }) => {
+    const theme = useTheme();
+
     return (
         <Box sx={{ position: 'relative', height: '100%', ...sx }}>
             <Box
@@ -25,8 +27,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, childr
                     flexDirection: 'column',
                     alignItems: side === 'left' ? 'flex-start' : 'flex-end',
                     overflow: 'hidden',
-                    backgroundColor: 'grey.100',
-                    zIndex: isOpen ? 1200 : 0, // Add zIndex for overlay effect
+                    backgroundColor: theme.palette.background.default,
+                    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                    zIndex: isOpen ? 1200 : 0,
                 }}
             >
                 {isOpen && (
@@ -38,14 +41,19 @@ const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, childr
             <ClampButton
                 side={side}
                 onClick={togglePanel}
-                isOpen={isOpen} // Pass isOpen state as a prop
+                isOpen={isOpen}
                 sx={{
                     position: 'absolute',
-                    top: '2%',
+                    top: '5%',
                     transform: 'translateY(-50%)',
                     [side]: isOpen ? '240px' : '0px',
                     transition: 'all 0.3s',
                     zIndex: 1,
+                    color: theme.palette.primary.main, // Set the icon color
+                    backgroundColor: theme.palette.background.default, // Set the background color
+                    '&:hover': {
+                        backgroundColor: theme.palette.action.hover, // Optional: Set a hover effect
+                    },
                 }}
             />
         </Box>

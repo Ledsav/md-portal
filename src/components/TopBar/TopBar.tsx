@@ -1,17 +1,24 @@
-// TopBar.tsx
-
+// src/components/TopBar/TopBar.tsx
 import React, { ReactNode } from 'react';
-import { AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { AppBar, Toolbar, Box, useTheme } from '@mui/material';
 
 interface TopBarProps {
-    children?: ReactNode;
+    leftComponent?: ReactNode;
+    children?: ReactNode; // Allow children to be passed
 }
 
-const TopBar: React.FC<TopBarProps> = ({ children }) => {
+const TopBar: React.FC<TopBarProps> = ({ leftComponent, children }) => {
+    const theme = useTheme();
+
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main }}>
             <Toolbar>
-                <Box>{children}</Box>
+                <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+                    {leftComponent}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    {children}
+                </Box>
             </Toolbar>
         </AppBar>
     );

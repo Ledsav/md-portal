@@ -1,7 +1,7 @@
 // ControlPanelContext.tsx
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import {clearIndexedDB, loadImagesFromIndexedDB, saveImageToIndexedDB} from "../utils/indexedDBUtil";
+import { clearIndexedDB, loadImagesFromIndexedDB, saveImageToIndexedDB, deleteImageFromIndexedDB } from "../utils/indexedDBUtil";
 
 interface ControlPanelContextType {
     sliderValue: number;
@@ -12,10 +12,10 @@ interface ControlPanelContextType {
     setLeftPanelOpen: (isOpen: boolean) => void;
     rightPanelOpen: boolean;
     setRightPanelOpen: (isOpen: boolean) => void;
-    images: string[];
+    images: { id: number, image: string }[];
     addImage: (image: string) => void;
-    removeImage: (index: number) => void;
-    setImages: (images: string[]) => void;
+    removeImage: (id: number) => void;
+    setImages: (images: { id: number, image: string }[]) => void;
     resetData: () => void;
 }
 
@@ -30,7 +30,7 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
     const [expanded, setExpanded] = useState<string[]>([]);
     const [leftPanelOpen, setLeftPanelOpen] = useState<boolean>(false);
     const [rightPanelOpen, setRightPanelOpen] = useState<boolean>(false);
-    const [images, setImagesState] = useState<string[]>([]);
+    const [images, setImagesState] = useState<{ id: number, image: string }[]>([]);
 
     useEffect(() => {
         const loadImages = async () => {
@@ -42,14 +42,17 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
 
     const addImage = async (image: string) => {
         await saveImageToIndexedDB(image);
-        setImagesState([...images, image]);
+        const loadedImages = await loadImagesFromIndexedDB();
+        setImagesState(loadedImages);
     };
 
-    const removeImage = (index: number) => {
-        setImagesState(images.filter((_, i) => i !== index));
+    const removeImage = async (id: number) => {
+        await deleteImageFromIndexedDB(id);
+        const remainingImages = images.filter(image => image.id !== id);
+        setImagesState(remainingImages);
     };
 
-    const setImages = (newImages: string[]) => {
+    const setImages = (newImages: { id: number, image: string }[]) => {
         setImagesState(newImages);
     };
 
@@ -76,7 +79,7 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
             addImage,
             removeImage,
             setImages,
-            resetData // Added this line
+            resetData
         }}>
             {children}
         </ControlPanelContext.Provider>
