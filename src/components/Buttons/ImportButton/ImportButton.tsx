@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 
 interface ImportButtonProps {
     onClick: () => void;
@@ -7,9 +7,11 @@ interface ImportButtonProps {
 
 const ImportButton: React.FC<ImportButtonProps> = ({ onClick }) => {
     return (
-        <Button variant="contained" onClick={onClick}>
-            Import Photo
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+            <Button variant="contained" onClick={onClick}>
+                Import Photo
+            </Button>
+        </Box>
     );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import TopBar from '../components/TopBar/TopBar';
 import MainPanel from '../components/MainPanel/MainPanel';
@@ -8,14 +8,13 @@ import TreeViewControl from '../components/TreeViewControl/TreeViewControl';
 import ImportDialog from '../components/Dialogs/ImportDialog/ImportDialog';
 import ImportButton from '../components/Buttons/ImportButton/ImportButton';
 import ImportResultDialog from '../components/Dialogs/ImportResultDialog/ImportResultDialog';
+import ImageImportWidget from '../components/ImageImportWidget/ImageImportWidget';
 import { ControlPanelProvider, useControlPanelContext } from '../context/ControlPanelContext';
-import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorageUtil';
+import useImageImport from '../hooks/useImageImport';
 
 const MainLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const [resultDialogOpen, setResultDialogOpen] = useState(false);
-    const [importSuccess, setImportSuccess] = useState(false);
-    const [image, setImage] = useState<string | null>(loadFromLocalStorage('uploadedImage'));
+    const { image, handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage } = useImageImport();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -29,37 +28,32 @@ const MainLayout: React.FC = () => {
 
     const handleDrop = (acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
-        const reader = new FileReader();
-        reader.onload = () => {
-            const imageData = reader.result as string;
-            setImage(imageData);
-            saveToLocalStorage('uploadedImage', imageData);
-            setImportSuccess(true);
-            setResultDialogOpen(true);
-        };
-        reader.onerror = () => {
-            setImportSuccess(false);
-            setResultDialogOpen(true);
-        };
-        reader.readAsDataURL(file);
+        handleImageImport(file);
         setOpen(false);
     };
 
-    useEffect(() => {
-        const savedImage = loadFromLocalStorage('uploadedImage');
-        if (savedImage) {
-            setImage(savedImage);
+    const handleLeftPanelToggle = () => {
+        if (isMobile && !leftPanelOpen) {
+            setRightPanelOpen(false);
         }
-    }, []);
+        setLeftPanelOpen(!leftPanelOpen);
+    };
+
+    const handleRightPanelToggle = () => {
+        if (isMobile && !rightPanelOpen) {
+            setLeftPanelOpen(false);
+        }
+        setRightPanelOpen(!rightPanelOpen);
+    };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <TopBar />
-            <Box sx={{ display: 'flex', flexGrow: 1 }}>
+            <Box sx={{ display: 'flex', flexGrow: 1, position: 'relative' }}>
                 <SidePanel
                     side="left"
-                    isOpen={isMobile ? false : leftPanelOpen}
-                    togglePanel={() => setLeftPanelOpen(!leftPanelOpen)}
+                    isOpen={leftPanelOpen}
+                    togglePanel={handleLeftPanelToggle}
                 >
                     <SliderControl />
                     <TreeViewControl />
@@ -69,22 +63,24 @@ const MainLayout: React.FC = () => {
                     sx={{
                         flexGrow: 1,
                         transition: 'margin 0.3s',
-                        marginLeft: isMobile ? '0' : leftPanelOpen ? '240px' : '0',
-                        marginRight: isMobile ? '0' : rightPanelOpen ? '240px' : '0',
+                        marginLeft: leftPanelOpen && !isMobile ? '240px' : '0',
+                        marginRight: rightPanelOpen && !isMobile ? '240px' : '0',
+                        position: 'relative', // Ensures that overlay panels on mobile don't affect layout
                     }}
                 >
-                    <MainPanel image={image} />
+                    <MainPanel />
                 </Box>
                 <SidePanel
                     side="right"
-                    isOpen={isMobile ? false : rightPanelOpen}
-                    togglePanel={() => setRightPanelOpen(!rightPanelOpen)}
+                    isOpen={rightPanelOpen}
+                    togglePanel={handleRightPanelToggle}
                 >
                     <ImportButton onClick={() => setOpen(true)} />
+                    <ImageImportWidget />
                 </SidePanel>
             </Box>
             <ImportDialog open={open} onClose={() => setOpen(false)} onDrop={handleDrop} />
-            <ImportResultDialog open={resultDialogOpen} onClose={() => setResultDialogOpen(false)} success={importSuccess} />
+            <ImportResultDialog open={resultDialogOpen} onClose={() => setResultDialogOpen(false)} success={importSuccess} message={importMessage} />
         </Box>
     );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, SxProps, Theme } from '@mui/material';
 import ClampButton from '../Buttons/ClampButton/ClampButton';
 
 interface SidePanelProps {
@@ -7,11 +7,12 @@ interface SidePanelProps {
     isOpen: boolean;
     togglePanel: () => void;
     children?: React.ReactNode; // Accept children components
+    sx?: SxProps<Theme>; // Optional sx prop
 }
 
-const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, children }) => {
+const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, children, sx }) => {
     return (
-        <Box sx={{ position: 'relative', height: '100%' }}>
+        <Box sx={{ position: 'relative', height: '100%', ...sx }}>
             <Box
                 sx={{
                     width: isOpen ? '240px' : '0px',
@@ -25,10 +26,11 @@ const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, childr
                     alignItems: side === 'left' ? 'flex-start' : 'flex-end',
                     overflow: 'hidden',
                     backgroundColor: 'grey.100',
+                    zIndex: isOpen ? 1200 : 0, // Add zIndex for overlay effect
                 }}
             >
                 {isOpen && (
-                    <Box sx={{ width: '240px', height: '100%', padding: 2 }}>
+                    <Box sx={{ width: '240px', height: '100%', padding: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         {children} {/* Render children components */}
                     </Box>
                 )}
@@ -39,7 +41,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, childr
                 isOpen={isOpen} // Pass isOpen state as a prop
                 sx={{
                     position: 'absolute',
-                    top: '50%',
+                    top: '2%',
                     transform: 'translateY(-50%)',
                     [side]: isOpen ? '240px' : '0px',
                     transition: 'all 0.3s',
