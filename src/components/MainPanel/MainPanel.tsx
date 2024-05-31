@@ -20,13 +20,12 @@ const MainPanel: React.FC<MainPanelProps> = ({ image }) => {
 
     return (
         <Box
-            component="main"
             sx={{
-                flexGrow: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                height: '100%',
                 p: 3,
                 backgroundColor: 'white',
                 overflow: 'auto',

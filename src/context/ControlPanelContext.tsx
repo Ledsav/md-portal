@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorageUtil';
 
 interface ControlPanelContextType {
     sliderValue: number;
@@ -14,8 +15,16 @@ interface ControlPanelProviderProps {
 }
 
 export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ children }) => {
-    const [sliderValue, setSliderValue] = useState<number>(30);
-    const [expanded, setExpanded] = useState<string[]>([]);
+    const [sliderValue, setSliderValue] = useState<number>(loadFromLocalStorage('sliderValue') || 30);
+    const [expanded, setExpanded] = useState<string[]>(loadFromLocalStorage('expandedNodes') || []);
+
+    useEffect(() => {
+        saveToLocalStorage('sliderValue', sliderValue);
+    }, [sliderValue]);
+
+    useEffect(() => {
+        saveToLocalStorage('expandedNodes', expanded);
+    }, [expanded]);
 
     return (
         <ControlPanelContext.Provider value={{ sliderValue, setSliderValue, expanded, setExpanded }}>
