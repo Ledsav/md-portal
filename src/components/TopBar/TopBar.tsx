@@ -1,11 +1,17 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
+// TopBar.tsx
 
-const TopBar: React.FC = () => {
+import React, { ReactNode } from 'react';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
+
+interface TopBarProps {
+    children?: ReactNode;
+}
+
+const TopBar: React.FC<TopBarProps> = ({ children }) => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6">Medical Visualization</Typography>
+                <Box>{children}</Box>
             </Toolbar>
         </AppBar>
     );

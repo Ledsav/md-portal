@@ -1,5 +1,7 @@
+// MainLayout.tsx
+
 import React, { useState } from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import TopBar from '../components/TopBar/TopBar';
 import MainPanel from '../components/MainPanel/MainPanel';
 import SidePanel from '../components/SidePanel/SidePanel';
@@ -15,6 +17,7 @@ import useImageImport from '../hooks/useImageImport';
 const MainLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
     const { image, handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage } = useImageImport();
+    const { resetData } = useControlPanelContext();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -48,7 +51,9 @@ const MainLayout: React.FC = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-            <TopBar />
+            <TopBar>
+                <Button onClick={resetData} color="inherit">Reset</Button>
+            </TopBar>
             <Box sx={{ display: 'flex', flexGrow: 1, position: 'relative' }}>
                 <SidePanel
                     side="left"

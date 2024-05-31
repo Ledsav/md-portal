@@ -4,10 +4,9 @@ import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { AddPhotoAlternate } from '@mui/icons-material';
 import { useControlPanelContext } from '../../context/ControlPanelContext';
 import useImageImport from '../../hooks/useImageImport';
-import RemoveButton from '../Buttons/RemoveButton/RemoveButton';
 
 const ImageImportWidget: React.FC = () => {
-    const { images, removeImage } = useControlPanelContext();
+    const { images} = useControlPanelContext();
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const { handleImageImport } = useImageImport();
 
