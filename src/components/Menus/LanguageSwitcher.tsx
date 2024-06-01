@@ -1,13 +1,13 @@
 // src/components/LanguageSwitcher.tsx
 import React from 'react';
-import { MenuItem, Select, SelectChangeEvent, useTheme } from '@mui/material';
+import {MenuItem, Select, SelectChangeEvent, useTheme} from '@mui/material';
 import useLanguage from '../../hooks/useLanguage';
 
 const LanguageSwitcher: React.FC = () => {
-    const { currentLanguage, changeLanguage } = useLanguage();
+    const {currentLanguage, changeLanguage} = useLanguage();
     const theme = useTheme();
 
-    const handleChange = (event: SelectChangeEvent<string>) => {
+    const handleChange = (event: SelectChangeEvent) => {
         changeLanguage(event.target.value as string);
     };
 

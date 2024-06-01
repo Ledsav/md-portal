@@ -1,13 +1,18 @@
 import React from 'react';
-import { Fab, useTheme } from '@mui/material';
-import { useControlPanelContext } from '../../../context/ControlPanelContext';
-import { useTranslation } from "react-i18next";
+import {Fab, useTheme} from '@mui/material';
+import {useControlPanelContext} from '../../../context/ControlPanelContext';
 import RestoreIcon from '@mui/icons-material/Restore';
 
 const ResetButton: React.FC = () => {
     const theme = useTheme();
-    const { setSliderValue, setExpanded, setLeftPanelOpen, setRightPanelOpen, setImages, resetData } = useControlPanelContext();
-    const { t } = useTranslation();
+    const {
+        setSliderValue,
+        setExpanded,
+        setLeftPanelOpen,
+        setRightPanelOpen,
+        setImages,
+        resetData
+    } = useControlPanelContext();
 
     const handleReset = () => {
         setSliderValue(30);
@@ -31,7 +36,7 @@ const ResetButton: React.FC = () => {
                 zIndex: 2000,
             }}
         >
-            <RestoreIcon />
+            <RestoreIcon/>
         </Fab>
     );
 };

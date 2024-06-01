@@ -1,6 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { clearIndexedDB, loadImagesFromIndexedDB, saveImageToIndexedDB, deleteImageFromIndexedDB } from "../utils/indexedDBUtil";
-import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorageUtil';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import {
+    clearIndexedDB,
+    deleteImageFromIndexedDB,
+    loadImagesFromIndexedDB,
+    saveImageToIndexedDB
+} from "../utils/indexedDBUtil";
+import {loadFromLocalStorage, saveToLocalStorage} from '../utils/localStorageUtil';
 
 interface ControlPanelContextType {
     sliderValue: number;
@@ -34,7 +39,7 @@ const STORAGE_KEYS = {
     selectedImageIndex: 'selectedImageIndex',
 };
 
-export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ children }) => {
+export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({children}) => {
     const [sliderValue, setSliderValueState] = useState<number>(30);
     const [expanded, setExpandedState] = useState<string[]>([]);
     const [leftPanelOpen, setLeftPanelOpenState] = useState<boolean>(false);
@@ -60,7 +65,7 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({ chil
             if (savedSelectedImageIndex !== null) setSelectedImageIndex(savedSelectedImageIndex);
         };
 
-        loadState();
+        loadState().then(r => r);
     }, []);
 
     const setSliderValue = (value: number) => {

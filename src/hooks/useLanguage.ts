@@ -1,11 +1,11 @@
 // src/hooks/useLanguage.ts
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 const useLanguage = () => {
-    const { i18n } = useTranslation();
+    const {i18n} = useTranslation();
 
     const changeLanguage = (language: string) => {
-        i18n.changeLanguage(language);
+        i18n.changeLanguage(language).then(r => r);
         localStorage.setItem('language', language); // Save selected language to localStorage
     };
 

@@ -1,20 +1,20 @@
 import React from 'react';
-import { Box, SxProps, Theme, useTheme } from '@mui/material';
+import {Box, SxProps, Theme, useTheme} from '@mui/material';
 import ClampButton from '../Buttons/ClampButton/ClampButton';
 
 interface SidePanelProps {
     side: 'left' | 'right';
     isOpen: boolean;
     togglePanel: () => void;
-    children?: React.ReactNode; // Accept children components
-    sx?: SxProps<Theme>; // Optional sx prop
+    children?: React.ReactNode;
+    sx?: SxProps<Theme>;
 }
 
-const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, children, sx }) => {
+const SidePanel: React.FC<SidePanelProps> = ({side, isOpen, togglePanel, children, sx}) => {
     const theme = useTheme();
 
     return (
-        <Box sx={{ position: 'relative', height: '100%', ...sx }}>
+        <Box sx={{position: 'relative', height: '100%', ...sx}}>
             <Box
                 sx={{
                     width: isOpen ? '240px' : '0px',
@@ -33,7 +33,14 @@ const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, childr
                 }}
             >
                 {isOpen && (
-                    <Box sx={{ width: '240px', height: '100%', padding: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <Box sx={{
+                        width: '240px',
+                        height: '100%',
+                        padding: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center'
+                    }}>
                         {children} {/* Render children components */}
                     </Box>
                 )}
@@ -49,10 +56,10 @@ const SidePanel: React.FC<SidePanelProps> = ({ side, isOpen, togglePanel, childr
                     [side]: isOpen ? '240px' : '0px',
                     transition: 'all 0.3s',
                     zIndex: 1,
-                    color: theme.palette.primary.main, // Set the icon color
-                    backgroundColor: theme.palette.background.default, // Set the background color
+                    color: theme.palette.primary.main,
+                    backgroundColor: theme.palette.background.default,
                     '&:hover': {
-                        backgroundColor: theme.palette.action.hover, // Optional: Set a hover effect
+                        backgroundColor: theme.palette.action.hover,
                     },
                 }}
             />

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Box, useMediaQuery, useTheme} from '@mui/material';
 import TopBar from '../components/TopBar/TopBar';
 import MainPanel from '../components/MainPanel/MainPanel';
 import SidePanel from '../components/SidePanel/SidePanel';
@@ -9,9 +9,9 @@ import ImportDialog from '../components/Dialogs/ImportDialog/ImportDialog';
 import ImportButton from '../components/Buttons/ImportButton/ImportButton';
 import ImportResultDialog from '../components/Dialogs/ImportResultDialog/ImportResultDialog';
 import ImageImportWidget from '../components/ImageImportWidget/ImageImportWidget';
-import { ControlPanelProvider, useControlPanelContext } from '../context/ControlPanelContext';
+import {ControlPanelProvider, useControlPanelContext} from '../context/ControlPanelContext';
 import useImageImport from '../hooks/useImageImport';
-import { ThemeProvider } from "../context/ThemeContext";
+import {ThemeProvider} from "../context/ThemeContext";
 import ToggleThemeButton from "../components/Buttons/ToggleThemeButton/ToggleThemeButton";
 import LanguageSwitcher from '../components/Menus/LanguageSwitcher';
 import SecondaryPanel from "../components/MainPanel/SecondaryPanel";
@@ -23,7 +23,7 @@ const STORAGE_KEY_CURRENT_TAB = 'currentTab';
 const MainLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [currentTab, setCurrentTab] = useState<number>(0);
-    const { image, handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage } = useImageImport();
+    const {handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage} = useImageImport();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -62,30 +62,30 @@ const MainLayout: React.FC = () => {
         setRightPanelOpen(!rightPanelOpen);
     };
 
-    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
         setCurrentTab(newValue);
         localStorage.setItem(STORAGE_KEY_CURRENT_TAB, newValue.toString());
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflowX: 'hidden' }}>
+        <Box sx={{display: 'flex', flexDirection: 'column', height: '100vh', overflowX: 'hidden'}}>
             <TopBar
-                centerComponent={<TabComponent currentTab={currentTab} onChange={handleTabChange} />}
+                centerComponent={<TabComponent currentTab={currentTab} onChange={handleTabChange}/>}
                 rightComponent={
                     <>
-                        <LanguageSwitcher />
-                        <ToggleThemeButton />
+                        <LanguageSwitcher/>
+                        <ToggleThemeButton/>
                     </>
                 }
             />
-            <Box sx={{ display: 'flex', flexGrow: 1, position: 'relative' }}>
+            <Box sx={{display: 'flex', flexGrow: 1, position: 'relative'}}>
                 <SidePanel
                     side="left"
                     isOpen={leftPanelOpen}
                     togglePanel={handleLeftPanelToggle}
                 >
-                    <SliderControl />
-                    <TreeViewControl />
+                    <SliderControl/>
+                    <TreeViewControl/>
                 </SidePanel>
                 <Box
                     component="main"
@@ -101,19 +101,20 @@ const MainLayout: React.FC = () => {
                         overflow: 'auto',
                     }}
                 >
-                    {currentTab === 0 ? <MainPanel /> : <SecondaryPanel />}
+                    {currentTab === 0 ? <MainPanel/> : <SecondaryPanel/>}
                 </Box>
                 <SidePanel
                     side="right"
                     isOpen={rightPanelOpen}
                     togglePanel={handleRightPanelToggle}
                 >
-                    <ImportButton onClick={() => setOpen(true)} />
-                    <ImageImportWidget />
+                    <ImportButton onClick={() => setOpen(true)}/>
+                    <ImageImportWidget/>
                 </SidePanel>
             </Box>
-            <ImportDialog open={open} onClose={() => setOpen(false)} onDrop={handleDrop} />
-            <ImportResultDialog open={resultDialogOpen} onClose={() => setResultDialogOpen(false)} success={importSuccess} message={importMessage} />
+            <ImportDialog open={open} onClose={() => setOpen(false)} onDrop={handleDrop}/>
+            <ImportResultDialog open={resultDialogOpen} onClose={() => setResultDialogOpen(false)}
+                                success={importSuccess} message={importMessage}/>
 
             <Box sx={{
                 position: 'fixed',
@@ -121,7 +122,7 @@ const MainLayout: React.FC = () => {
                 right: theme.spacing(2),
                 zIndex: 2000,
             }}>
-                <ResetButton />
+                <ResetButton/>
             </Box>
         </Box>
     );
@@ -130,7 +131,7 @@ const MainLayout: React.FC = () => {
 const MainLayoutWithProvider: React.FC = () => (
     <ControlPanelProvider>
         <ThemeProvider>
-            <MainLayout />
+            <MainLayout/>
         </ThemeProvider>
     </ControlPanelProvider>
 );
