@@ -3,6 +3,7 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { useControlPanelContext } from '../../context/ControlPanelContext';
 import ToolPanel from '../Menus/ToolPanel';
 import DrawingCanvas, { DrawingCanvasRef } from '../Canvas/DrawingCanvas';
+import { useTranslation } from 'react-i18next';
 
 const SecondaryPanel: React.FC = () => {
     const { images, selectedImageIndex, addImage } = useControlPanelContext();
@@ -11,6 +12,7 @@ const SecondaryPanel: React.FC = () => {
     const theme = useTheme();
     const selectedImage = images[selectedImageIndex]?.image;
     const canvasRef = useRef<DrawingCanvasRef>(null);
+    const { t } = useTranslation();  // Use the translation hook
 
     const handleToolSelect = (tool: string) => {
         setSelectedTool(tool);
@@ -83,7 +85,7 @@ const SecondaryPanel: React.FC = () => {
                 </>
             ) : (
                 <Typography sx={{ color: theme.palette.text.primary }}>
-                    No image selected. Please select an image from the main page.
+                    {t('no image placeholder')}
                 </Typography>
             )}
         </Box>

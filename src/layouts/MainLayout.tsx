@@ -18,7 +18,6 @@ import SecondaryPanel from "../components/MainPanel/SecondaryPanel";
 import TabComponent from "../components/Menus/TabComponent";
 import ResetButton from "../components/Buttons/ResetButton/ResetButton";
 
-
 const STORAGE_KEY_CURRENT_TAB = 'currentTab';
 
 const MainLayout: React.FC = () => {
@@ -99,7 +98,7 @@ const MainLayout: React.FC = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         position: 'relative',
-                        overflow: 'hidden'
+                        overflow: 'auto',
                     }}
                 >
                     {currentTab === 0 ? <MainPanel /> : <SecondaryPanel />}

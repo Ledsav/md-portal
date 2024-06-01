@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { AppBar, Toolbar, Box, useTheme, useMediaQuery } from '@mui/material';
+import logo from '../../assets/images/In_app_logo.png';
 
 interface TopBarProps {
     leftComponent?: ReactNode;
@@ -13,14 +14,16 @@ const TopBar: React.FC<TopBarProps> = ({ leftComponent, centerComponent, rightCo
 
     return (
         <AppBar position="static" sx={{ backgroundColor: theme.palette.primary.main }}>
-            <Toolbar sx={{ flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', width: '100%' }}>
+            <Toolbar sx={{ flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', width: isMobile ? '100%' : 'auto', justifyContent: isMobile ? 'space-between' : 'flex-start' }}>
+                    <img src={logo} alt="Logo" style={{ height: '40px', marginRight: '16px' }} />
                     {leftComponent}
-                    {isMobile && <Box sx={{ flexGrow: 1 }} />}
-                    {rightComponent}
                 </Box>
-                <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: isMobile ? 'center' : 'center', alignItems: 'center', mt: isMobile ? 1 : 0 }}>
+                <Box sx={{ display: 'flex', justifyContent: isMobile ? 'center' : 'center', flexGrow: 1, mt: isMobile ? 1 : 0 }}>
                     {centerComponent}
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: isMobile ? 1 : 0 }}>
+                    {rightComponent}
                 </Box>
             </Toolbar>
         </AppBar>
