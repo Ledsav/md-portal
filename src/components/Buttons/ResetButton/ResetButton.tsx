@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, useTheme } from '@mui/material';
+import { Fab, useTheme } from '@mui/material';
 import { useControlPanelContext } from '../../../context/ControlPanelContext';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import RestoreIcon from '@mui/icons-material/Restore';
 
 const ResetButton: React.FC = () => {
     const theme = useTheme();
@@ -19,19 +20,19 @@ const ResetButton: React.FC = () => {
     };
 
     return (
-        <Button
-            variant="contained"
+        <Fab
+            color="primary"
+            aria-label="reset"
             onClick={handleReset}
             sx={{
-                color: theme.palette.getContrastText(theme.palette.primary.main),
-                backgroundColor: theme.palette.primary.main,
-                '&:hover': {
-                    backgroundColor: theme.palette.primary.dark,
-                },
+                position: 'fixed',
+                bottom: theme.spacing(2),
+                right: theme.spacing(2),
+                zIndex: 2000,
             }}
         >
-            {t('reset all')}
-        </Button>
+            <RestoreIcon />
+        </Fab>
     );
 };
 
