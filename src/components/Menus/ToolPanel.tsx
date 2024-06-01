@@ -15,15 +15,14 @@ interface ToolPanelProps {
     onContrastChange: (value: number) => void;
     onSave: () => void;
     onDownload: () => void;
+    selectedTool: string;
 }
 
-const ToolPanel: React.FC<ToolPanelProps> = ({ onToolSelect, onClear, contrastValue, onContrastChange, onSave, onDownload }) => {
-    const [selectedTool, setSelectedTool] = useState<string>('segment');
+const ToolPanel: React.FC<ToolPanelProps> = ({ onToolSelect, onClear, contrastValue, onContrastChange, onSave, onDownload, selectedTool }) => {
     const theme = useTheme();
     const { t } = useTranslation();
 
     const handleToolSelect = (tool: string) => {
-        setSelectedTool(tool);
         onToolSelect(tool);
     };
 

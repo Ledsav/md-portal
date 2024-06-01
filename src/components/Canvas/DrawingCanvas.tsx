@@ -4,9 +4,11 @@ import useImage from "../../utils/useImage";
 import Konva from 'konva';
 
 interface DrawingCanvasProps {
-    tool: string | null;
+    tool: string;
     image: string;
     contrastValue: number;
+    lines: { points: number[], erased: boolean }[];
+    setLines: React.Dispatch<React.SetStateAction<{ points: number[], erased: boolean }[]>>;
 }
 
 export interface DrawingCanvasRef {
@@ -14,8 +16,7 @@ export interface DrawingCanvasRef {
     stageRef: React.RefObject<any>;
 }
 
-const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ tool, image, contrastValue }, ref) => {
-    const [lines, setLines] = useState<{ points: number[], erased: boolean }[]>([]);
+const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ tool, image, contrastValue, lines, setLines }, ref) => {
     const isDrawing = useRef(false);
     const startPoint = useRef<{ x: number, y: number } | null>(null);
     const [img, isLoaded] = useImage(image);
@@ -38,8 +39,8 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ tool, 
     const handleMouseDown = (event: any) => {
         if (!isLoaded || !img || (tool !== 'segment' && tool !== 'eraser')) return;
         const stage = event.target.getStage();
-        const point = stage.getPointerPosition();
-        if (point.x < 0 || point.x > imageDimensions.width || point.y < 0 || point.y > imageDimensions.height) return;
+        const point = stage?.getPointerPosition();
+        if (!point || point.x < 0 || point.x > imageDimensions.width || point.y < 0 || point.y > imageDimensions.height) return;
         isDrawing.current = true;
         startPoint.current = point;
         if (tool === 'segment') {
@@ -50,8 +51,8 @@ const DrawingCanvas = forwardRef<DrawingCanvasRef, DrawingCanvasProps>(({ tool, 
     const handleMouseMove = (event: any) => {
         if (!isDrawing.current || !startPoint.current) return;
         const stage = event.target.getStage();
-        const point = stage.getPointerPosition();
-        if (point.x < 0 || point.x > imageDimensions.width || point.y < 0 || point.y > imageDimensions.height) return;
+        const point = stage?.getPointerPosition();
+        if (!point || point.x < 0 || point.x > imageDimensions.width || point.y < 0 || point.y > imageDimensions.height) return;
 
         const newLines = [...lines];
         const lastLine = newLines[newLines.length - 1];
