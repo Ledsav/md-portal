@@ -58,7 +58,7 @@ const SecondaryPanel: React.FC = () => {
 
     useEffect(() => {
         handleClear();
-    }, [selectedImage]);
+    }, [handleClear, selectedImage]);
 
     return (
         <Box

@@ -23,7 +23,7 @@ const STORAGE_KEY_CURRENT_TAB = 'currentTab';
 const MainLayout: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [currentTab, setCurrentTab] = useState<number>(0);
-    const { image, handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage } = useImageImport();
+    const {handleImageImport, resultDialogOpen, setResultDialogOpen, importSuccess, importMessage } = useImageImport();
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
