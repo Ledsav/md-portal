@@ -17,7 +17,6 @@ const TabComponent: React.FC<TabComponentProps> = ({ currentTab, onChange }) => 
             onChange={onChange}
             indicatorColor="primary"
             textColor="inherit"
-            centered
             variant="scrollable"
             scrollButtons="auto"
             allowScrollButtonsMobile
