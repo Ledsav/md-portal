@@ -1,5 +1,5 @@
-import React from 'react';
-import {Box, Typography, useTheme} from '@mui/material';
+import React, {useCallback, useMemo} from 'react';
+import {Box, SxProps, Theme, Typography, useTheme} from '@mui/material';
 import {SimpleTreeView, TreeItem} from '@mui/x-tree-view';
 import {useTranslation} from 'react-i18next';
 import {useControlPanelContext} from '../../context/ControlPanelContext';
@@ -9,31 +9,44 @@ const TreeViewControl: React.FC = () => {
     const theme = useTheme();
     const {t} = useTranslation();
 
-    const handleToggle = (_event: React.SyntheticEvent, nodeIds: string[]) => {
+    const handleToggle = useCallback((_event: React.SyntheticEvent, nodeIds: string[]) => {
         setExpanded(nodeIds);
-    };
+    }, [setExpanded]);
+
+    const boxStyles: SxProps<Theme> = useMemo(() => ({
+        padding: 2,
+        backgroundColor: theme.palette.background.default,
+        borderRadius: 2,
+    }), [theme]);
+
+    const typographyStyles: SxProps<Theme> = useMemo(() => ({
+        color: theme.palette.text.primary,
+        mt: 2,
+    }), [theme]);
+
+    const treeViewStyles: SxProps<Theme> = useMemo(() => ({
+        '& .MuiTreeItem-root': {
+            '&:hover > .MuiTreeItem-content': {
+                backgroundColor: theme.palette.action.hover,
+            },
+            '&.Mui-selected > .MuiTreeItem-content': {
+                backgroundColor: theme.palette.action.selected,
+                '&:hover': {
+                    backgroundColor: theme.palette.action.hover,
+                },
+            },
+        },
+    }), [theme]);
 
     return (
-        <Box sx={{padding: 2, backgroundColor: theme.palette.background.default, borderRadius: 2}}>
-            <Typography variant="h6" sx={{color: theme.palette.text.primary, mt: 2}}>
+        <Box sx={boxStyles}>
+            <Typography variant="h6" sx={typographyStyles}>
                 {t('Tree View')}
             </Typography>
             <SimpleTreeView
                 expandedItems={expanded}
                 onExpandedItemsChange={handleToggle}
-                sx={{
-                    '& .MuiTreeItem-root': {
-                        '&:hover > .MuiTreeItem-content': {
-                            backgroundColor: theme.palette.action.hover,
-                        },
-                        '&.Mui-selected > .MuiTreeItem-content': {
-                            backgroundColor: theme.palette.action.selected,
-                            '&:hover': {
-                                backgroundColor: theme.palette.action.hover,
-                            },
-                        },
-                    },
-                }}
+                sx={treeViewStyles}
             >
                 <TreeItem itemId="1" label={t('Level 1')}>
                     <TreeItem itemId="2" label={t('Level 1.1')}>
@@ -53,4 +66,4 @@ const TreeViewControl: React.FC = () => {
     );
 };
 
-export default TreeViewControl;
+export default React.memo(TreeViewControl);

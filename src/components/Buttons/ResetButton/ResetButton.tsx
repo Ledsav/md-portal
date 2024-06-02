@@ -1,5 +1,5 @@
-import React from 'react';
-import {Fab, useTheme} from '@mui/material';
+import React, {useMemo} from 'react';
+import {Fab, SxProps, Theme, useTheme} from '@mui/material';
 import {useControlPanelContext} from '../../../context/ControlPanelContext';
 import RestoreIcon from '@mui/icons-material/Restore';
 
@@ -11,7 +11,7 @@ const ResetButton: React.FC = () => {
         setLeftPanelOpen,
         setRightPanelOpen,
         setImages,
-        resetData
+        resetData,
     } = useControlPanelContext();
 
     const handleReset = () => {
@@ -24,21 +24,23 @@ const ResetButton: React.FC = () => {
         resetData();
     };
 
+    const fabStyles: SxProps<Theme> = useMemo(() => ({
+        position: 'fixed',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+        zIndex: 2000,
+    }), [theme]);
+
     return (
         <Fab
             color="primary"
             aria-label="reset"
             onClick={handleReset}
-            sx={{
-                position: 'fixed',
-                bottom: theme.spacing(2),
-                right: theme.spacing(2),
-                zIndex: 2000,
-            }}
+            sx={fabStyles}
         >
             <RestoreIcon/>
         </Fab>
     );
 };
 
-export default ResetButton;
+export default React.memo(ResetButton);

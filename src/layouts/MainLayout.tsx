@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Box, useMediaQuery, useTheme} from '@mui/material';
 import TopBar from '../components/TopBar/TopBar';
 import MainPanel from '../components/MainPanel/MainPanel';
@@ -42,30 +42,30 @@ const MainLayout: React.FC = () => {
         }
     }, []);
 
-    const handleDrop = (acceptedFiles: File[]) => {
+    const handleDrop = useCallback((acceptedFiles: File[]) => {
         const file = acceptedFiles[0];
         handleImageImport(file);
         setOpen(false);
-    };
+    }, [handleImageImport]);
 
-    const handleLeftPanelToggle = () => {
+    const handleLeftPanelToggle = useCallback(() => {
         if (isMobile && !leftPanelOpen) {
             setRightPanelOpen(false);
         }
         setLeftPanelOpen(!leftPanelOpen);
-    };
+    }, [isMobile, leftPanelOpen, setLeftPanelOpen, setRightPanelOpen]);
 
-    const handleRightPanelToggle = () => {
+    const handleRightPanelToggle = useCallback(() => {
         if (isMobile && !rightPanelOpen) {
             setLeftPanelOpen(false);
         }
         setRightPanelOpen(!rightPanelOpen);
-    };
+    }, [isMobile, rightPanelOpen, setRightPanelOpen, setLeftPanelOpen]);
 
-    const handleTabChange = (_event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleTabChange = useCallback((_event: React.ChangeEvent<{}>, newValue: number) => {
         setCurrentTab(newValue);
         localStorage.setItem(STORAGE_KEY_CURRENT_TAB, newValue.toString());
-    };
+    }, []);
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', height: '100vh', overflowX: 'hidden'}}>
@@ -115,7 +115,6 @@ const MainLayout: React.FC = () => {
             <ImportDialog open={open} onClose={() => setOpen(false)} onDrop={handleDrop}/>
             <ImportResultDialog open={resultDialogOpen} onClose={() => setResultDialogOpen(false)}
                                 success={importSuccess} message={importMessage}/>
-
             <Box sx={{
                 position: 'fixed',
                 bottom: theme.spacing(2),

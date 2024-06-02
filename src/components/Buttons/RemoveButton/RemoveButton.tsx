@@ -1,33 +1,41 @@
-import React from 'react';
-import { IconButton, IconButtonProps, useTheme } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import React, {useMemo} from 'react';
+import {IconButton, IconButtonProps, SxProps, Theme, useTheme} from '@mui/material';
+import {Delete} from '@mui/icons-material';
 
 interface RemoveButtonProps extends IconButtonProps {
-    onClick: () => void;
+    onClick?: () => void;
 }
 
-const RemoveButton: React.FC<RemoveButtonProps> = ({ onClick, ...props }) => {
-    const theme = useTheme();
+const RemoveButton: React.FC<RemoveButtonProps> =
+    ({
+         onClick = () => {
+         },
+         sx,
+         ...props
+     }) => {
+        const theme = useTheme();
 
-    return (
-        <IconButton
-            onClick={onClick}
-            sx={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                backgroundColor: theme.palette.background.paper,
-                color: theme.palette.error.main,
-                '&:hover': {
-                    backgroundColor: theme.palette.action.hover,
-                },
-                ...props.sx,
-            }}
-            {...props}
-        >
-            <Delete />
-        </IconButton>
-    );
-};
+        const buttonStyles: SxProps<Theme> = useMemo(() => ({
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.error.main,
+            '&:hover': {
+                backgroundColor: theme.palette.action.hover,
+            },
+            ...sx,
+        }), [theme, sx]);
 
-export default RemoveButton;
+        return (
+            <IconButton
+                onClick={onClick}
+                sx={buttonStyles}
+                {...props}
+            >
+                <Delete/>
+            </IconButton>
+        );
+    };
+
+export default React.memo(RemoveButton);

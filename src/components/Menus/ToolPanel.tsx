@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
-import {Box, Button, IconButton, Slider, Typography, useTheme} from '@mui/material';
+import React, {useCallback, useMemo, useState} from 'react';
+import {Box, Button, IconButton, Slider, SxProps, Theme, Typography, useTheme} from '@mui/material';
 import BrushIcon from '@mui/icons-material/Brush';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContrastIcon from '@mui/icons-material/Contrast';
+import PanToolIcon from '@mui/icons-material/PanTool';
 import SaveIcon from '@mui/icons-material/Save';
 import DownloadIcon from '@mui/icons-material/Download';
 import ClearButton from '../Buttons/ClearButton/ClearButton';
@@ -23,65 +24,93 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
                                                  contrastValue,
                                                  onContrastChange,
                                                  onSave,
-                                                 onDownload
+                                                 onDownload,
                                              }) => {
     const [selectedTool, setSelectedTool] = useState<string>('segment');
     const theme = useTheme();
     const {t} = useTranslation();
 
-    const handleToolSelect = (tool: string) => {
+    const handleToolSelect = useCallback((tool: string) => {
         setSelectedTool(tool);
         onToolSelect(tool);
-    };
+    }, [onToolSelect]);
 
-    const handleSliderChange = (_event: Event, newValue: number | number[]) => {
+    const handleSliderChange = useCallback((_event: Event, newValue: number | number[]) => {
         onContrastChange(newValue as number);
-    };
+    }, [onContrastChange]);
+
+    const panelStyles: SxProps<Theme> = useMemo(() => ({
+        padding: 2,
+        backgroundColor: theme.palette.primary.main,
+        borderRadius: '8px',
+    }), [theme]);
+
+    const iconButtonStyles = useCallback((tool: string): SxProps<Theme> => ({
+        color: selectedTool === tool
+            ? theme.palette.getContrastText(theme.palette.primary.main)
+            : 'rgba(255, 255, 255, 0.5)',
+    }), [selectedTool, theme]);
+
+    const contrastBoxStyles: SxProps<Theme> = useMemo(() => ({
+        padding: 2,
+    }), []);
+
+    const typographyStyles: SxProps<Theme> = useMemo(() => ({
+        color: theme.palette.getContrastText(theme.palette.primary.main),
+    }), [theme]);
+
+    const sliderStyles: SxProps<Theme> = useMemo(() => ({
+        color: theme.palette.getContrastText(theme.palette.primary.main),
+        '& .MuiSlider-thumb': {
+            backgroundColor: theme.palette.getContrastText(theme.palette.primary.main),
+        },
+        '& .MuiSlider-rail': {
+            color: 'rgba(255, 255, 255, 0.5)',
+        },
+    }), [theme]);
+
+    const buttonContainerStyles: SxProps<Theme> = useMemo(() => ({
+        display: 'flex',
+        justifyContent: 'center',
+        gap: 2,
+    }), []);
+
+    const clearButtonContainerStyles: SxProps<Theme> = useMemo(() => ({
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: 2,
+    }), []);
 
     return (
-        <Box sx={{padding: 2, backgroundColor: theme.palette.primary.main, borderRadius: '8px'}}>
+        <Box sx={panelStyles}>
             <Box sx={{display: 'flex', justifyContent: 'space-around', marginBottom: 2}}>
-                <IconButton
-                    onClick={() => handleToolSelect('segment')}
-                    sx={{color: selectedTool === 'segment' ? theme.palette.getContrastText(theme.palette.primary.main) : 'rgba(255, 255, 255, 0.5)'}}
-                >
+                <IconButton onClick={() => handleToolSelect('segment')} sx={iconButtonStyles('segment')}>
                     <BrushIcon/>
                 </IconButton>
-                <IconButton
-                    onClick={() => handleToolSelect('eraser')}
-                    sx={{color: selectedTool === 'eraser' ? theme.palette.getContrastText(theme.palette.primary.main) : 'rgba(255, 255, 255, 0.5)'}}
-                >
+                <IconButton onClick={() => handleToolSelect('eraser')} sx={iconButtonStyles('eraser')}>
                     <DeleteIcon/>
                 </IconButton>
-                <IconButton
-                    onClick={() => handleToolSelect('contrast')}
-                    sx={{color: selectedTool === 'contrast' ? theme.palette.getContrastText(theme.palette.primary.main) : 'rgba(255, 255, 255, 0.5)'}}
-                >
+                <IconButton onClick={() => handleToolSelect('contrast')} sx={iconButtonStyles('contrast')}>
                     <ContrastIcon/>
+                </IconButton>
+                <IconButton onClick={() => handleToolSelect('move')} sx={iconButtonStyles('move')}>
+                    <PanToolIcon/>
                 </IconButton>
             </Box>
             {selectedTool === 'contrast' && (
-                <Box sx={{padding: 2}}>
-                    <Typography gutterBottom sx={{color: theme.palette.getContrastText(theme.palette.primary.main)}}>
+                <Box sx={contrastBoxStyles}>
+                    <Typography gutterBottom sx={typographyStyles}>
                         {t('Adjust Contrast')}
                     </Typography>
                     <Slider
                         value={contrastValue}
                         onChange={handleSliderChange}
                         aria-labelledby="contrast-slider"
-                        sx={{
-                            color: theme.palette.getContrastText(theme.palette.primary.main),
-                            '& .MuiSlider-thumb': {
-                                backgroundColor: theme.palette.getContrastText(theme.palette.primary.main),
-                            },
-                            '& .MuiSlider-rail': {
-                                color: 'rgba(255, 255, 255, 0.5)',
-                            },
-                        }}
+                        sx={sliderStyles}
                     />
                 </Box>
             )}
-            <Box sx={{display: 'flex', justifyContent: 'center', gap: 2}}>
+            <Box sx={buttonContainerStyles}>
                 <Button onClick={onSave} startIcon={<SaveIcon/>} variant="contained" color="primary">
                     {t('Save')}
                 </Button>
@@ -89,11 +118,11 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
                     {t('Download')}
                 </Button>
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'center', marginTop: 2}}>
+            <Box sx={clearButtonContainerStyles}>
                 <ClearButton onClick={onClear}/>
             </Box>
         </Box>
     );
 };
 
-export default ToolPanel;
+export default React.memo(ToolPanel);

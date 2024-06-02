@@ -1,6 +1,17 @@
-import React from 'react';
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, useTheme } from '@mui/material';
-import { useDropzone } from 'react-dropzone';
+import React, {useMemo} from 'react';
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    SxProps,
+    Theme,
+    Typography,
+    useTheme
+} from '@mui/material';
+import {DropzoneInputProps, DropzoneRootProps, useDropzone} from 'react-dropzone';
 import {useTranslation} from "react-i18next";
 
 interface ImportDialogProps {
@@ -9,31 +20,48 @@ interface ImportDialogProps {
     onDrop: (acceptedFiles: File[]) => void;
 }
 
-const ImportDialog: React.FC<ImportDialogProps> = ({ open, onClose, onDrop }) => {
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+const ImportDialog: React.FC<ImportDialogProps> = ({open, onClose, onDrop}) => {
+    const {getRootProps, getInputProps}: { getRootProps: () => DropzoneRootProps; getInputProps: () => DropzoneInputProps } = useDropzone({onDrop});
     const theme = useTheme();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
+
+    const dialogStyles = useMemo(() => ({
+        backgroundColor: theme.palette.background.paper,
+    }), [theme]);
+
+    const boxStyles = useMemo<SxProps<Theme>>(() => ({
+        border: `2px dashed ${theme.palette.text.secondary}`,
+        padding: 2,
+        textAlign: 'center',
+    }), [theme]);
+
+    const buttonStyles = useMemo<SxProps<Theme>>(() => ({
+        color: theme.palette.getContrastText(theme.palette.secondary.main),
+        backgroundColor: theme.palette.secondary.main,
+        '&:hover': {
+            backgroundColor: theme.palette.secondary.dark,
+        },
+    }), [theme]);
+
+    const titleStyles = useMemo<SxProps<Theme>>(() => ({
+        color: theme.palette.text.primary,
+    }), [theme]);
+
+    const typographyStyles = useMemo<SxProps<Theme>>(() => ({
+        color: theme.palette.text.primary,
+    }), [theme]);
 
     return (
-        <Dialog open={open} onClose={onClose} PaperProps={{ sx: { backgroundColor: theme.palette.background.paper } }}>
-            <DialogTitle sx={{ color: theme.palette.text.primary }}>{t('import photo')}</DialogTitle>
+        <Dialog open={open} onClose={onClose} PaperProps={{sx: dialogStyles}}>
+            <DialogTitle sx={titleStyles}>{t('import photo')}</DialogTitle>
             <DialogContent>
-                <Box {...getRootProps()} sx={{ border: `2px dashed ${theme.palette.text.secondary}`, padding: 2, textAlign: 'center' }}>
+                <Box {...getRootProps()} sx={boxStyles}>
                     <input {...getInputProps()} />
-                    <Typography sx={{ color: theme.palette.text.primary }}>{t('dialog photo')}</Typography>
+                    <Typography sx={typographyStyles}>{t('dialog photo')}</Typography>
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button
-                    onClick={onClose}
-                    sx={{
-                        color: theme.palette.getContrastText(theme.palette.secondary.main),
-                        backgroundColor: theme.palette.secondary.main,
-                        '&:hover': {
-                            backgroundColor: theme.palette.secondary.dark,
-                        },
-                    }}
-                >
+                <Button onClick={onClose} sx={buttonStyles}>
                     {t('close')}
                 </Button>
             </DialogActions>
@@ -41,4 +69,4 @@ const ImportDialog: React.FC<ImportDialogProps> = ({ open, onClose, onDrop }) =>
     );
 };
 
-export default ImportDialog;
+export default React.memo(ImportDialog);

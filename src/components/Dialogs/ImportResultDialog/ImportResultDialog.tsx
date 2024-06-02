@@ -1,5 +1,15 @@
-import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, useTheme } from '@mui/material';
+import React, {useMemo} from 'react';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    SxProps,
+    Theme,
+    Typography,
+    useTheme
+} from '@mui/material';
 import {useTranslation} from "react-i18next";
 
 interface ImportResultDialogProps {
@@ -9,29 +19,40 @@ interface ImportResultDialogProps {
     message: string;
 }
 
-const ImportResultDialog: React.FC<ImportResultDialogProps> = ({ open, onClose, success, message }) => {
+const ImportResultDialog: React.FC<ImportResultDialogProps> = ({open, onClose, success, message}) => {
     const theme = useTheme();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
+
+    const paperStyles = useMemo<SxProps<Theme>>(() => ({
+        backgroundColor: theme.palette.background.paper,
+    }), [theme]);
+
+    const titleStyles = useMemo<SxProps<Theme>>(() => ({
+        color: success ? theme.palette.success.main : theme.palette.error.main,
+    }), [success, theme]);
+
+    const messageStyles = useMemo<SxProps<Theme>>(() => ({
+        color: theme.palette.text.primary,
+    }), [theme]);
+
+    const buttonStyles = useMemo<SxProps<Theme>>(() => ({
+        color: theme.palette.getContrastText(theme.palette.primary.main),
+        backgroundColor: theme.palette.primary.main,
+        '&:hover': {
+            backgroundColor: theme.palette.primary.dark,
+        },
+    }), [theme]);
 
     return (
-        <Dialog open={open} onClose={onClose} PaperProps={{ sx: { backgroundColor: theme.palette.background.paper } }}>
-            <DialogTitle sx={{ color: success ? theme.palette.success.main : theme.palette.error.main }}>
-                {success ? t('import success') : t('import failed') }
+        <Dialog open={open} onClose={onClose} PaperProps={{sx: paperStyles}}>
+            <DialogTitle sx={titleStyles}>
+                {success ? t('import success') : t('import failed')}
             </DialogTitle>
             <DialogContent>
-                <Typography sx={{ color: theme.palette.text.primary }}>{message}</Typography>
+                <Typography sx={messageStyles}>{message}</Typography>
             </DialogContent>
             <DialogActions>
-                <Button
-                    onClick={onClose}
-                    sx={{
-                        color: theme.palette.getContrastText(theme.palette.primary.main),
-                        backgroundColor: theme.palette.primary.main,
-                        '&:hover': {
-                            backgroundColor: theme.palette.primary.dark,
-                        },
-                    }}
-                >
+                <Button onClick={onClose} sx={buttonStyles}>
                     {t('close')}
                 </Button>
             </DialogActions>
@@ -39,4 +60,4 @@ const ImportResultDialog: React.FC<ImportResultDialogProps> = ({ open, onClose, 
     );
 };
 
-export default ImportResultDialog;
+export default React.memo(ImportResultDialog);

@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {
     clearIndexedDB,
     deleteImageFromIndexedDB,
@@ -65,79 +65,96 @@ export const ControlPanelProvider: React.FC<ControlPanelProviderProps> = ({child
             if (savedSelectedImageIndex !== null) setSelectedImageIndex(savedSelectedImageIndex);
         };
 
-        loadState().then(r => r);
+        loadState();
     }, []);
 
-    const setSliderValue = (value: number) => {
+    const setSliderValue = useCallback((value: number) => {
         setSliderValueState(value);
         saveToLocalStorage(STORAGE_KEYS.sliderValue, value);
-    };
+    }, []);
 
-    const setExpanded = (nodeIds: string[]) => {
+    const setExpanded = useCallback((nodeIds: string[]) => {
         setExpandedState(nodeIds);
         saveToLocalStorage(STORAGE_KEYS.expanded, nodeIds);
-    };
+    }, []);
 
-    const setLeftPanelOpen = (isOpen: boolean) => {
+    const setLeftPanelOpen = useCallback((isOpen: boolean) => {
         setLeftPanelOpenState(isOpen);
         saveToLocalStorage(STORAGE_KEYS.leftPanelOpen, isOpen);
-    };
+    }, []);
 
-    const setRightPanelOpen = (isOpen: boolean) => {
+    const setRightPanelOpen = useCallback((isOpen: boolean) => {
         setRightPanelOpenState(isOpen);
         saveToLocalStorage(STORAGE_KEYS.rightPanelOpen, isOpen);
-    };
+    }, []);
 
-    const addImage = async (image: string) => {
+    const addImage = useCallback(async (image: string) => {
         await saveImageToIndexedDB(image);
         const loadedImages = await loadImagesFromIndexedDB();
         setImagesState(loadedImages);
-    };
+    }, []);
 
-    const removeImage = async (id: number) => {
+    const removeImage = useCallback(async (id: number) => {
         await deleteImageFromIndexedDB(id);
-        const remainingImages = images.filter(image => image.id !== id);
-        setImagesState(remainingImages);
-    };
+        setImagesState(prevImages => prevImages.filter(image => image.id !== id));
+    }, []);
 
-    const setImages = (newImages: { id: number, image: string }[]) => {
+    const setImages = useCallback((newImages: { id: number, image: string }[]) => {
         setImagesState(newImages);
-    };
+    }, []);
 
-    const resetData = async () => {
-        setSliderValue(30);
-        setExpanded([]);
-        setLeftPanelOpen(false);
-        setRightPanelOpen(false);
+    const resetData = useCallback(async () => {
+        setSliderValueState(30);
+        setExpandedState([]);
+        setLeftPanelOpenState(false);
+        setRightPanelOpenState(false);
         setImagesState([]);
         setSelectedImageIndex(0);
         await clearIndexedDB();
         localStorage.clear();
-    };
+    }, []);
 
-    const selectImage = (index: number) => {
+    const selectImage = useCallback((index: number) => {
         setSelectedImageIndex(index);
         saveToLocalStorage(STORAGE_KEYS.selectedImageIndex, index);
-    };
+    }, []);
+
+    const contextValue = useMemo(() => ({
+        sliderValue,
+        setSliderValue,
+        expanded,
+        setExpanded,
+        leftPanelOpen,
+        setLeftPanelOpen,
+        rightPanelOpen,
+        setRightPanelOpen,
+        images,
+        addImage,
+        removeImage,
+        setImages,
+        resetData,
+        selectedImageIndex,
+        selectImage,
+    }), [
+        sliderValue,
+        setSliderValue,
+        expanded,
+        setExpanded,
+        leftPanelOpen,
+        setLeftPanelOpen,
+        rightPanelOpen,
+        setRightPanelOpen,
+        images,
+        addImage,
+        removeImage,
+        setImages,
+        resetData,
+        selectedImageIndex,
+        selectImage,
+    ]);
 
     return (
-        <ControlPanelContext.Provider value={{
-            sliderValue,
-            setSliderValue,
-            expanded,
-            setExpanded,
-            leftPanelOpen,
-            setLeftPanelOpen,
-            rightPanelOpen,
-            setRightPanelOpen,
-            images,
-            addImage,
-            removeImage,
-            setImages,
-            resetData,
-            selectedImageIndex,
-            selectImage,
-        }}>
+        <ControlPanelContext.Provider value={contextValue}>
             {children}
         </ControlPanelContext.Provider>
     );

@@ -1,15 +1,27 @@
-// src/hooks/useLanguage.ts
 import {useTranslation} from 'react-i18next';
+import {useEffect, useState} from 'react';
 
 const useLanguage = () => {
     const {i18n} = useTranslation();
+    const [currentLanguage, setCurrentLanguage] = useState<string>(i18n.language || 'en');
+
+    useEffect(() => {
+        const storedLanguage = localStorage.getItem('language');
+        if (storedLanguage && storedLanguage !== i18n.language) {
+            i18n.changeLanguage(storedLanguage).then(() => {
+                setCurrentLanguage(storedLanguage);
+            });
+        } else {
+            setCurrentLanguage(i18n.language);
+        }
+    }, [i18n]);
 
     const changeLanguage = (language: string) => {
-        i18n.changeLanguage(language).then(r => r);
-        localStorage.setItem('language', language); // Save selected language to localStorage
+        i18n.changeLanguage(language).then(() => {
+            setCurrentLanguage(language);
+            localStorage.setItem('language', language);
+        });
     };
-
-    const currentLanguage = i18n.language || 'en'; // Default to English if no language is set
 
     return {
         currentLanguage,
