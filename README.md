@@ -27,6 +27,41 @@ MD Portal is a React.js application designed for managing and editing medical im
 - **Persistent State:** Maintains state after browser refresh or reopening.
 - **Mobile Friendly:** Optimized for key features.
 
+## Examples
+
+![collapsables](https://github.com/Ledsav/md-portal/assets/82059014/f9bdab04-9639-4992-8a5d-22dcad6fc721)
+Collapsable panels
+
+![basicComponents](https://github.com/Ledsav/md-portal/assets/82059014/a4d06826-8b7e-414a-81ef-f257ed7ed860)
+Slider and Tree View
+
+![basicImport](https://github.com/Ledsav/md-portal/assets/82059014/58ef987d-6a0f-4272-8538-c608bc335fac)
+Basic Import with button and dropzone
+
+![filteredImport](https://github.com/Ledsav/md-portal/assets/82059014/cbc1a58b-cf76-4b67-9580-e7e67d02978b)
+Filtered Import with a mini gallery
+
+![deleteImages](https://github.com/Ledsav/md-portal/assets/82059014/def901f8-d174-4fb4-a6c4-f96cfa60edb5)
+Delete Images from the gallery
+
+![responsive](https://github.com/Ledsav/md-portal/assets/82059014/d762188e-4029-455f-81b0-616d8865d3c3)
+App responsiveness in both desktop and mobile view
+
+![changeLenguage](https://github.com/Ledsav/md-portal/assets/82059014/2eaaf734-fcf3-4a17-8288-274d1e8c9100)
+Change language (en,fr)
+
+![changeTheme](https://github.com/Ledsav/md-portal/assets/82059014/1928a80d-34b5-4453-b331-4c35897247be)
+Change theme (light, dark)
+
+![editTools](https://github.com/Ledsav/md-portal/assets/82059014/c7f679da-72a5-4cd1-8edd-6bc34a0085a8)
+Edit tools (Draw, Delete, Contrast, Move)
+
+![saveEdit](https://github.com/Ledsav/md-portal/assets/82059014/43eaaf48-892d-4fe3-92b3-3a3058cf4a87)
+Save and Download the edited image
+
+![resetApp](https://github.com/Ledsav/md-portal/assets/82059014/7f274d7b-f417-4035-b7de-39ac277a49f9)
+Reset the App
+
 ### Possible Improvements:
 
 - Additional tools: Zoom, recenter, filters.
@@ -36,7 +71,7 @@ MD Portal is a React.js application designed for managing and editing medical im
 
 ### Known Issues:
 
-- Initial render of the language menu does not show the default selection (EN).
+- The initial render of the language menu does not show the default selection (EN).
 - Difficulty drawing and navigating the edit window on mobile devices.
 
 ## Available Scripts
