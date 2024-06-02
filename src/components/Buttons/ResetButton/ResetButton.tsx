@@ -1,7 +1,8 @@
 import React, {useMemo} from 'react';
-import {Fab, SxProps, Theme, useTheme} from '@mui/material';
+import {Fab, SxProps, Theme, Tooltip, useTheme} from '@mui/material';
 import {useControlPanelContext} from '../../../context/ControlPanelContext';
 import RestoreIcon from '@mui/icons-material/Restore';
+import {useTranslation} from "react-i18next";
 
 const ResetButton: React.FC = () => {
     const theme = useTheme();
@@ -13,6 +14,7 @@ const ResetButton: React.FC = () => {
         setImages,
         resetData,
     } = useControlPanelContext();
+    const {t} = useTranslation();
 
     const handleReset = () => {
         setSliderValue(30);
@@ -32,14 +34,16 @@ const ResetButton: React.FC = () => {
     }), [theme]);
 
     return (
-        <Fab
-            color="primary"
-            aria-label="reset"
-            onClick={handleReset}
-            sx={fabStyles}
-        >
-            <RestoreIcon/>
-        </Fab>
+        <Tooltip title={t('reset all')} arrow>
+            <Fab
+                color="primary"
+                aria-label="reset"
+                onClick={handleReset}
+                sx={fabStyles}
+            >
+                <RestoreIcon/>
+            </Fab>
+        </Tooltip>
     );
 };
 

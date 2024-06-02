@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {Box, Button, IconButton, Slider, SxProps, Theme, Typography, useTheme} from '@mui/material';
+import {Box, Button, IconButton, Slider, SxProps, Theme, Tooltip, Typography, useTheme} from '@mui/material';
 import BrushIcon from '@mui/icons-material/Brush';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContrastIcon from '@mui/icons-material/Contrast';
@@ -84,18 +84,26 @@ const ToolPanel: React.FC<ToolPanelProps> = ({
     return (
         <Box sx={panelStyles}>
             <Box sx={{display: 'flex', justifyContent: 'space-around', marginBottom: 2}}>
-                <IconButton onClick={() => handleToolSelect('segment')} sx={iconButtonStyles('segment')}>
-                    <BrushIcon/>
-                </IconButton>
-                <IconButton onClick={() => handleToolSelect('eraser')} sx={iconButtonStyles('eraser')}>
-                    <DeleteIcon/>
-                </IconButton>
-                <IconButton onClick={() => handleToolSelect('contrast')} sx={iconButtonStyles('contrast')}>
-                    <ContrastIcon/>
-                </IconButton>
-                <IconButton onClick={() => handleToolSelect('move')} sx={iconButtonStyles('move')}>
-                    <PanToolIcon/>
-                </IconButton>
+                <Tooltip title={t('Draw')} arrow>
+                    <IconButton onClick={() => handleToolSelect('segment')} sx={iconButtonStyles('segment')}>
+                        <BrushIcon/>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={t('Erase')} arrow>
+                    <IconButton onClick={() => handleToolSelect('eraser')} sx={iconButtonStyles('eraser')}>
+                        <DeleteIcon/>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={t('Adjust Contrast')} arrow>
+                    <IconButton onClick={() => handleToolSelect('contrast')} sx={iconButtonStyles('contrast')}>
+                        <ContrastIcon/>
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title={t('Move')} arrow>
+                    <IconButton onClick={() => handleToolSelect('move')} sx={iconButtonStyles('move')}>
+                        <PanToolIcon/>
+                    </IconButton>
+                </Tooltip>
             </Box>
             {selectedTool === 'contrast' && (
                 <Box sx={contrastBoxStyles}>
